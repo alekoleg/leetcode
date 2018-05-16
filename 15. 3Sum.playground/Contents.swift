@@ -19,50 +19,40 @@ import UIKit
 class Solution {
     func threeSum(_ nums: [Int]) -> [[Int]] {
         let sorted = nums.sorted()
-        var used: Set<Int> = Set<Int>()
         var result:[[Int]] = []
+        let map: [Int:Int] = buildMap(sorted)
 
-        print("sorted - \(sorted)")
+//        print("sorted - \(sorted)")
         for i in 0..<sorted.count {
             let number = sorted[i]
-            if used.contains(number) {
+            if (i > 0 && sorted[i - 1] == number) || number > 0 {
                 continue
             }
-            used.insert(number)
 
-            if number <= 0 {
-                var localUsed = Set<Int>()
-                for j in i+1..<sorted.count {
-                    let nextNumber = sorted[j]
-                    if !localUsed.contains(nextNumber) {
-                        let missingNumber = 0 - nextNumber - number
-                        for g in j+1..<sorted.count {
-                            if sorted[g] == missingNumber {
-                                result.append([number, nextNumber, missingNumber])
-                                break
-                            }
-                        }
-                    }
-                    localUsed.insert(nextNumber)
+            for j in i+1..<sorted.count {
+                let nextNumber = sorted[j]
+                let missingNumber = 0 - nextNumber - number
+                if (j > i+1 && sorted[j - 1] == nextNumber) || missingNumber < nextNumber {
+                    continue
                 }
-            } else {
-                break
+
+                if let index = map[missingNumber], index > j {
+                    result.append([number, nextNumber, missingNumber])
+                }
             }
         }
-        print("result \(result)")
+//        print("result \(result)")
         return result
     }
 
-    private func notPositive(_ nums: [Int]) -> [Int] {
-        var result: [Int] = []
-        nums.forEach { (num) in
-            if num <= 0 {
-                result.append(num)
-            }
+    func buildMap(_ nums:[Int]) -> [Int : Int] {
+        var result: [Int : Int] = [:]
+        for i in 0..<nums.count {
+            result[nums[i]] = i
         }
         return result
     }
 }
 
 assert(Solution().threeSum([0, 0, 0, 0]) == [[0, 0, 0]])
-assert(Solution().threeSum([-1, 0, 1, 2, -1, -4]) == [[-1, 0, 1],[-1, -1, 2]])
+assert(Solution().threeSum([-1, 0, 1, 2, -1, -4]) == [[-1, -1, 2],[-1, 0, 1]])
