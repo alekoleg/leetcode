@@ -22,7 +22,6 @@ class Solution {
         var result:[[Int]] = []
         let map: [Int:Int] = buildMap(sorted)
 
-//        print("sorted - \(sorted)")
         for i in 0..<sorted.count {
             let number = sorted[i]
             if (i > 0 && sorted[i - 1] == number) || number > 0 {
@@ -41,7 +40,7 @@ class Solution {
                 }
             }
         }
-//        print("result \(result)")
+        print("result \(result)")
         return result
     }
 
